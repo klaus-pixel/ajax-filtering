@@ -32,11 +32,12 @@ $args = array(
        'post_status' => 'publish',
        'posts_per_page' => 10, 
        'orderby' => 'title',
-       'order' => 'ASC'
+       'order' => 'ASC',
+       'paged' => 1,
     );
 
     $query = new WP_Query( $args );
-
+    // var_dump($query);
 if($query->have_posts()) : ?>
  <ul class="post-titles"> 
     <?php
@@ -50,6 +51,9 @@ endif;
 </ul>
 <?php wp_reset_postdata(); ?>
 
+<div class="btn__wrapper">
+  <a href="#!" class="btn btn__primary" id="load-more">Load more</a>
+</div>
 
 <?php
   get_footer();

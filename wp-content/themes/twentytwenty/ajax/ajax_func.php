@@ -18,14 +18,14 @@ function filter_cpt() {
        'post_status' => 'publish',
        'posts_per_page' => 10, 
        'orderby' => 'title',
-       'order' => 'ASC'
+       'order' => 'ASC',
+	   'paged' => $_POST['paged'],
+
 	]);
   
 	if($ajaxposts->have_posts()) {
-	  while($ajaxposts->have_posts()) : $ajaxposts->the_post(); ?>
-		<h2><a href="<?php the_permalink() ?>"><?php the_title(); ?></a></h2>
-		<p><?php the_excerpt(); ?></p> 
-	  <?php
+	  while($ajaxposts->have_posts()) : $ajaxposts->the_post(); 
+	  get_template_part( 'template-parts/filter', 'posts' );
 	  endwhile;
 	} else {
 	 
@@ -33,5 +33,30 @@ function filter_cpt() {
   
 	die();
   }
+  
   add_action('wp_ajax_filter_cpt', 'filter_cpt');
   add_action('wp_ajax_nopriv_filter_cpt', 'filter_cpt');
+
+  
+  function load_more_cpt() {
+	$ajaxposts = new WP_Query([
+	  'post_type' => array('news', 'jobs', 'items'),
+	  'posts_per_page' => 6,
+	  'orderby' => 'date',
+	  'order' => 'DESC',
+	  'paged' => $_POST['paged'],
+	]);
+  
+	if($ajaxposts->have_posts()) {
+	  while($ajaxposts->have_posts()) : $ajaxposts->the_post();
+		get_template_part( 'template-parts/filter', 'posts' );
+
+	  endwhile;
+	} else {
+	}
+  
+	die();
+  }
+  add_action('wp_ajax_load_more_cpt', 'load_more_cpt');
+  add_action('wp_ajax_nopriv_load_more_cpt', 'load_more_cpt');
+  
